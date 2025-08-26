@@ -1,17 +1,32 @@
 import { LineStyle, Time, isBusinessDay } from 'lightweight-charts';
 
+export enum HoveredCornerShape {
+	Circle = 0,
+	Square = 1,
+}
+
 export interface ShapeDrawingOptions {
 	borderColor: string;
 	borderWidth: number;
 	borderStyle: LineStyle;
 	borderVisible: boolean;
-	labelColor: string;
-	labelTextColor: string;
 	fillColor: string; // Either rgba, or hex/rgb with fillOpacity applied to it
 	fillOpacity: number; // Overridden if fillColor is an rgba string
+	joinFirstToLastCorner: boolean; // Allows for a series of lines to be joined
 
+	mutable: boolean; // Whether the shape can be moved or changed by the user. Hovering is also ignored if false.
+	hoveredFillOpacity: number; // Only applied if fillOpacity option above is applied
+	hoveredFillDetection: boolean; // Allows for hovering over the middle of a shape. Always off if joinFirstToLastCorner = false
+	hoveredCornerShape: HoveredCornerShape | null; // The fill is the same as the border color
+	hoveredCornerSize: number; // The size of the corner in pixels
+	hoveredEdgeWidth: number;
+	hoveredEdgeDetection: boolean;
+
+	// Axis options
 	showTimeAxisLabels: boolean;
 	showPriceAxisLabels: boolean;
+	labelColor: string;
+	labelTextColor: string;
 	priceLabelFormatter: (price: number) => string;
 	timeLabelFormatter: (time: Time) => string;
 }
@@ -24,6 +39,15 @@ export const defaultOptions: ShapeDrawingOptions = {
 	borderVisible: true,
 	fillColor: '#ccc',
 	fillOpacity: 0.5,
+	joinFirstToLastCorner: true,
+
+	mutable: true,
+	hoveredEdgeWidth: 2,
+	hoveredFillOpacity: 0.7,
+	hoveredCornerShape: HoveredCornerShape.Square,
+	hoveredCornerSize: 20,
+	hoveredFillDetection: true,
+	hoveredEdgeDetection: true,
 
 	showTimeAxisLabels: false,
 	showPriceAxisLabels: false,

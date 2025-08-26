@@ -20,12 +20,21 @@ export class ShapeDrawingPaneView implements IPrimitivePaneView {
 
 		for (const p of this._source.points) {
 			const y = this._source.series.priceToCoordinate(p.price);
-			const x = this._source.chart.timeScale().timeToCoordinate(p.time);
+			let x = this._source.chart.timeScale().timeToCoordinate(p.time);
+
+			if (x !== null) {
+				p.logical = this._source.chart.timeScale().coordinateToLogical(x) || undefined;
+			} else {
+				if (p.logical !== undefined) {
+					x = this._source.chart.timeScale().logicalToCoordinate(p.logical);
+				}
+			}
+
 			this._points.push({ x, y });
 		}
 	}
 
 	renderer() {
-		return new ShapeDrawingPaneRenderer(this._points, this._source.options);
+		return new ShapeDrawingPaneRenderer(this._points, this._source.highlightCorners, this._source.options);
 	}
 }

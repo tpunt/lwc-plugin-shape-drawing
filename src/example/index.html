@@ -9,6 +9,7 @@
 				background-color: rgba(248, 249, 253, 1);
 				color: rgba(19, 23, 34, 1);
 			}
+
 			#chart {
 				margin-inline: auto;
 				max-width: 1000px;
@@ -17,12 +18,58 @@
 				border-radius: 5px;
 				overflow: hidden;
 			}
+
+			#shapeDrawingSelection {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				z-index: 1000;
+				background: #ccc;
+				padding: 10px;
+				border-radius: 5px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
+
+			#shapeDrawingSelection > button {
+				font-size: 2em;
+				display: block;
+			}
+
+			#shapeDrawingSelection > button:hover {
+				cursor: pointer;
+				background-color: #aaa;
+			}
+
+			#shapeDrawingOptions {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				z-index: 1000;
+				background: #ccc;
+				padding: 10px;
+				border-radius: 5px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
+
+			#shapeDrawingOptions > label {
+				display: block;
+			}
 		</style>
 	</head>
 	<body style="background-color: #555">
-		<div style="position: absolute; top: 10px; left: 10px; z-index: 1000; background: #ccc; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-			Edge count: <input id="edge-count" type="number" min="2" max="10" value="2" />
-			<ul id="edges"></ul>
+		<div id="shapeDrawingSelection">
+			<h2>Drawings</h2>
+			<button title="Triangle">⊿</button>
+			<button title="Square">□</button>
+			<button title="Linked edged">↯</button>
+			<button title="Arbitrary number of edges">⬡</button>
+		</div>
+		<div id="shapeDrawingOptions">
+			<h2>Options</h2>
+			<label>
+				Fill opacity:
+				<input type="range" id="fillOpacity" min="0" max="1" step="0.01" value="0.5" />
+			</label>
 		</div>
 		<div id="chart"></div>
 		<script type="module" src="./example.ts"></script>

@@ -1,14 +1,10 @@
-import {
-	IChartApi,
-	ISeriesApi,
-	SeriesOptionsMap,
-	Time,
-} from 'lightweight-charts';
+import { IChartApi, ISeriesApi, SeriesOptionsMap, Time, Logical } from 'lightweight-charts';
 import { ShapeDrawingOptions } from './options';
 
 export interface Point {
 	time: Time;
 	price: number;
+	logical?: Logical;
 }
 
 export interface ShapeDrawingDataSource {
@@ -16,4 +12,5 @@ export interface ShapeDrawingDataSource {
 	series: ISeriesApi<keyof SeriesOptionsMap>;
 	options: ShapeDrawingOptions;
 	points: Point[];
+	highlightCorners: boolean;
 }

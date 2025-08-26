@@ -1,14 +1,16 @@
 import { CanvasRenderingTarget2D } from 'fancy-canvas';
 import { Coordinate, IPrimitivePaneRenderer, LineStyle } from 'lightweight-charts';
 import { ViewPoint } from './pane-view';
-import { ShapeDrawingOptions } from './options';
+import { HoveredCornerShape, ShapeDrawingOptions } from './options';
 
 export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 	_points: ViewPoint[];
 	_options: ShapeDrawingOptions;
+	_highlightCorners: boolean;
 
-	constructor(points: ViewPoint[], options: ShapeDrawingOptions) {
+	constructor(points: ViewPoint[], highlightCorners: boolean, options: ShapeDrawingOptions) {
 		this._points = points;
+		this._highlightCorners = highlightCorners;
 		this._options = options;
 	}
 
@@ -25,25 +27,30 @@ export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 			const ctx = scope.context;
 
 			ctx.beginPath();
-			ctx.moveTo(points[points.length - 1].x, points[points.length - 1].y);
+
+			if (this._options.joinFirstToLastCorner) {
+				ctx.moveTo(points[points.length - 1].x, points[points.length - 1].y);
+			}
 
 			for (let i = 0; i < points.length; ++i) {
 				ctx.lineTo(points[i].x, points[i].y);
 			}
 
-			if (this._options.fillColor.startsWith('rgb')) {
-				if (this._options.fillColor.startsWith('rgba')) {
-					ctx.fillStyle = this._options.fillColor;
+			if (this._options.joinFirstToLastCorner) {
+				if (this._options.fillColor.startsWith('rgb')) {
+					if (this._options.fillColor.startsWith('rgba')) {
+						ctx.fillStyle = this._options.fillColor;
+					} else {
+						// Converts rgb(a, b, c) to rgba(a, b, c, 0.5) if fillOpacity is 0.5
+						ctx.fillStyle = this._options.fillColor.substring(
+							0, this._options.fillColor.length - 1
+						) + `, ${this._options.fillOpacity})`;
+					}
 				} else {
-					// Converts rgb(a, b, c) to rgba(a, b, c, 0.5) if fillOpacity is 0.5
-					ctx.fillStyle = this._options.fillColor.substring(
-						0, this._options.fillColor.length - 1
-					) + `, ${this._options.fillOpacity})`;
+					ctx.fillStyle = this._hexToRgba(this._options.fillColor, this._options.fillOpacity);
 				}
-			} else {
-				ctx.fillStyle = this._hexToRgba(this._options.fillColor, this._options.fillOpacity);
+				ctx.fill();
 			}
-			ctx.fill();
 
 			if (this._options.borderVisible) {
 				ctx.strokeStyle = this._options.borderColor;
@@ -55,6 +62,33 @@ export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 			}
 
 			ctx.stroke();
+
+			if (this._highlightCorners && this._options.hoveredCornerShape !== null) {
+				switch (this._options.hoveredCornerShape) {
+					case HoveredCornerShape.Circle: {
+						ctx.fillStyle = this._options.borderColor;
+						const cornerRadius = this._options.hoveredCornerSize / 2;
+
+						for (const point of points) {
+							ctx.beginPath();
+							ctx.arc(point.x, point.y, cornerRadius, 0, 2 * Math.PI);
+							ctx.fill();
+						}
+						break;
+					}
+					case HoveredCornerShape.Square: {
+						ctx.fillStyle = this._options.borderColor;
+						const cornerSize = this._options.hoveredCornerSize;
+
+						for (const point of points) {
+							ctx.beginPath();
+							ctx.rect(point.x - cornerSize / 2, point.y - cornerSize / 2, cornerSize, cornerSize);
+							ctx.fill();
+						}
+						break;
+					}
+				}
+			}
 		});
 	}
 
