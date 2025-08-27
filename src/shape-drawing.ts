@@ -156,8 +156,8 @@ export class ShapeDrawing
 
 	private _setHovered(yes: boolean) {
 		if (yes) {
-			if (this._options.borderWidth !== this._options.hoveredEdgeWidth) {
-				this._options.borderWidth = this._options.hoveredEdgeWidth;
+			if (this._options.borderWidth !== this._options.hoveredBorderWidth) {
+				this._options.borderWidth = this._options.hoveredBorderWidth;
 				this._options.fillOpacity = this._options.hoveredFillOpacity;
 				this._highlightCorners = true;
 				this.requestUpdate();
@@ -197,12 +197,12 @@ export class ShapeDrawing
 			// For lines (2 points), check if cursor is near the line segment
 			// For polygons (3+ points), check if cursor is inside the shape
 			if (points.length === 2) {
-				if (this._options.hoveredEdgeDetection && this._isPointNearLine(x, y, points[0], points[1])) {
+				if (this._options.hoveredBorderDetection && this._isPointNearLine(x, y, points[0], points[1])) {
 					hovered = true;
 				}
 			} else if (points.length >= 3) {
 				if (!this._options.hoveredFillDetection || !this._options.joinFirstToLastCorner) { // Border hovering only
-					if (this._options.hoveredEdgeDetection) {
+					if (this._options.hoveredBorderDetection) {
 						for (let i = 1; i < points.length; i++) {
 							if (this._isPointNearLine(x, y, points[i - 1], points[i])) {
 								hovered = true;
@@ -306,7 +306,7 @@ export class ShapeDrawing
 			return false;
 		}
 
-		const hitRadius = this._options.hoveredEdgeWidth / devicePixelRatio;
+		const hitRadius = this._options.hoveredBorderWidth / devicePixelRatio;
 
 		// Calculate the distance from point (x, y) to line segment (p1, p2)
 		const A = x - p1.x;

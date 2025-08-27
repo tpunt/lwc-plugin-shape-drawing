@@ -19,8 +19,8 @@ export interface ShapeDrawingOptions {
 	hoveredFillDetection: boolean; // Allows for hovering over the middle of a shape. Always off if joinFirstToLastCorner = false
 	hoveredCornerShape: HoveredCornerShape | null; // The fill is the same as the border color
 	hoveredCornerSize: number; // The size of the corner in pixels
-	hoveredEdgeWidth: number;
-	hoveredEdgeDetection: boolean;
+	hoveredBorderWidth: number;
+	hoveredBorderDetection: boolean;
 
 	// Axis options
 	showTimeAxisLabels: boolean;
@@ -42,12 +42,12 @@ export const defaultOptions: ShapeDrawingOptions = {
 	joinFirstToLastCorner: true,
 
 	mutable: true,
-	hoveredEdgeWidth: 2,
+	hoveredBorderWidth: 2,
 	hoveredFillOpacity: 0.7,
 	hoveredCornerShape: HoveredCornerShape.Square,
 	hoveredCornerSize: 20,
 	hoveredFillDetection: true,
-	hoveredEdgeDetection: true,
+	hoveredBorderDetection: true,
 
 	showTimeAxisLabels: false,
 	showPriceAxisLabels: false,

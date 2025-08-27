@@ -24,7 +24,7 @@ const shape1 = new ShapeDrawing(
 		showPriceAxisLabels: true,
 		labelColor: '#aaa',
 		labelTextColor: '#000',
-		hoveredEdgeWidth: 8,
+		hoveredBorderWidth: 8,
 		hoveredFillOpacity: 0.6,
 	},
 );

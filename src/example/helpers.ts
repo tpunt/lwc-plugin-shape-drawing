@@ -1,22 +1,39 @@
 import { Logical, MouseEventParams, Time } from "lightweight-charts";
 import { defaultShapeOptions, Point } from "./classes";
-import { chart, fillOpacityElement, lineSeries, seriesPricePrecision, state } from "./data";
+import { chart, fillOpacityElement, lineSeries, seriesPricePrecision, shapeDrawingSelectionElement, state } from "./data";
 import { HoveredObject, ShapeDrawing } from "../shape-drawing";
+
+const selectedButtonColor = '#aaa';
+const deselectedButtonColor = '#ccc';
 
 export function shapeDrawingSelection(event: MouseEvent) {
 	if (!(event.target instanceof HTMLButtonElement)) {
 		return;
 	}
 
+	if (state.currentlySelectedShape) {
+		selectShape(null);
+	}
+
 	if (state.shapeToDraw === event.target.textContent) { // Deselect it
-		event.target.style.backgroundColor = '#ccc';
+		event.target.style.backgroundColor = deselectedButtonColor;
 		state.shapeToDraw = '';
 		state.edgeCount = 0;
 		state.shapeOptions = defaultShapeOptions;
 		return;
 	}
 
-	event.target.style.backgroundColor = '#aaa';
+	if (state.shapeToDraw !== '') {
+		// Fetch the shapeToDraw button by iterating through all buttons and finding the one with the same textContent
+		const shapeToDrawButton = Array.from(shapeDrawingSelectionElement.children).find(
+			button => (button as HTMLButtonElement).textContent === state.shapeToDraw
+		);
+		if (shapeToDrawButton) {
+			(shapeToDrawButton as HTMLButtonElement).style.backgroundColor = deselectedButtonColor;
+		}
+	}
+
+	event.target.style.backgroundColor = selectedButtonColor;
 
 	state.shapeToDraw = event.target.textContent!;
 
@@ -195,6 +212,17 @@ export function chartCrosshairMoveEvent(event:  MouseEventParams<Time>) {
 export function keyUpEvent(event: KeyboardEvent) {
 	switch (event.key) {
 	case 'Escape':
+		if (state.shapeToDraw !== '') {
+			// Fetch the shapeToDraw button by iterating through all buttons and finding the one with the same textContent
+			const shapeToDrawButton = Array.from(shapeDrawingSelectionElement.children).find(
+				button => (button as HTMLButtonElement).textContent === state.shapeToDraw
+			);
+			if (shapeToDrawButton) {
+				(shapeToDrawButton as HTMLButtonElement).style.backgroundColor = deselectedButtonColor;
+			}
+			state.shapeToDraw = '';
+		}
+
 		if (state.currentlySelectedShape) {
 			selectShape(null);
 		}

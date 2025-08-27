@@ -8,7 +8,7 @@ export const defaultShapeOptions: Partial<ShapeDrawingOptions> = {
 	borderColor: '#f0f',
 	borderWidth: 2,
 	borderStyle: LineStyle.Dashed,
-	hoveredEdgeWidth: 4,
+	hoveredBorderWidth: 4,
 	hoveredFillOpacity: 0.6,
 };
 
