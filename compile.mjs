@@ -10,7 +10,7 @@ function buildPackageJson(packageName) {
 	 */
 	return {
 		name: packageName,
-		version: '1.0.0',
+		version: '2.0.0',
 		keywords: ['lwc-plugin', 'lightweight-charts'],
 		type: 'module',
 		main: `./${packageName}.umd.cjs`,
