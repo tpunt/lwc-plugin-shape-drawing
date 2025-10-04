@@ -12,22 +12,28 @@ Shape features:
 
 See the `ShapeDrawingOptions` interface in `./src/options.ts` for setting these properties.
 
+## Installation
+
+```bash
+npm install lwc-plugin-shape-drawing
+```
+
+## Usage
+
+```ts
+import { ShapeDrawing, ShapeDrawingOptions } from 'lwc-plugin-shape-drawing';
+```
+
 ## Visual Demo
 
 ![shape-drawing-demo](https://github.com/user-attachments/assets/e5b28fdf-548a-4e3e-80f6-fb957e99bf71)
 
-## Running Locally
-
-```shell
-npm install
-npm run dev
-```
-
-Visit `localhost:5173` in the browser.
-
 ## Code Example
 
-```js
+```ts
+import { ShapeDrawing } from 'lwc-plugin-shape-drawing';
+import { LineStyle } from 'lightweight-charts';
+
 // Draw a triangle
 const shape1 = new ShapeDrawing(
 	[
@@ -58,3 +64,26 @@ In `./src/example/example.ts`, the following is shown:
 The file also shows an implementation of interactive drawing via clicking on the chart. E.g.
 
 https://github.com/user-attachments/assets/97dc1993-6dd6-4c50-b951-a008db28c577
+
+## Development
+
+### Building the Package
+
+```bash
+npm run compile
+```
+
+This will:
+1. Compile TypeScript to JavaScript
+2. Bundle the plugin for both ES modules and UMD
+3. Generate TypeScript type definitions
+4. Output everything to the `dist/` folder
+
+### Running Locally
+
+```bash
+npm install
+npm run dev
+```
+
+Visit `localhost:5173` in the browser.

@@ -5,6 +5,9 @@ import { ShapeDrawingOptions, defaultOptions, HoveredCornerShape } from './optio
 import { ShapeDrawingPaneView } from './pane-view';
 import { PluginBase } from './plugin-base';
 
+// Re-export types for public API
+export type { ShapeDrawingOptions } from './options';
+
 export class ShapeDrawing
 	extends PluginBase
 	implements ShapeDrawingDataSource

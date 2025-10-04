@@ -1,9 +1,30 @@
 {
   "name": "lwc-plugin-shape-drawing",
+  "version": "2.1.0",
   "type": "module",
+  "main": "./dist/lwc-plugin-shape-drawing.umd.cjs",
+  "module": "./dist/lwc-plugin-shape-drawing.js",
+  "types": "./dist/lwc-plugin-shape-drawing.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/lwc-plugin-shape-drawing.d.ts",
+        "default": "./dist/lwc-plugin-shape-drawing.js"
+      },
+      "require": {
+        "types": "./dist/lwc-plugin-shape-drawing.d.cts",
+        "default": "./dist/lwc-plugin-shape-drawing.umd.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite --config src/vite.config.js",
-    "compile": "tsc && node compile.mjs"
+    "compile": "tsc && node compile.mjs",
+    "prepare": "npm run compile",
+    "prepublishOnly": "npm run compile"
   },
   "devDependencies": {
     "typescript": "^5.0.4",
