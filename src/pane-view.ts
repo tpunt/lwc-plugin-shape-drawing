@@ -23,7 +23,7 @@ export class ShapeDrawingPaneView implements IPrimitivePaneView {
 			let x = this._source.chart.timeScale().timeToCoordinate(p.time);
 
 			if (x !== null) {
-				p.logical = this._source.chart.timeScale().coordinateToLogical(x) || undefined;
+				p.logical = this._source.chart.timeScale().coordinateToLogical(x) ?? undefined;
 			} else {
 				if (p.logical !== undefined) {
 					x = this._source.chart.timeScale().logicalToCoordinate(p.logical);
