@@ -6,7 +6,8 @@ import { ShapeDrawingPaneView } from './pane-view';
 import { PluginBase } from './plugin-base';
 
 // Re-export types for public API
-export type { ShapeDrawingOptions, HoveredCornerShape } from './options';
+export type { ShapeDrawingOptions } from './options';
+export { HoveredCornerShape } from './options';
 
 export class ShapeDrawing
 	extends PluginBase
