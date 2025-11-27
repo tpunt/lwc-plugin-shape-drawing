@@ -160,7 +160,11 @@ export class ShapeDrawing
 
 	private _setHovered(yes: boolean) {
 		if (yes) {
-			if (this._options.borderWidth !== this._options.hoveredBorderWidth) {
+			if (
+				this._options.borderWidth !== this._options.hoveredBorderWidth ||
+				this._options.fillOpacity !== this._options.hoveredFillOpacity ||
+				this._highlightCorners !== true
+			) {
 				this._options.borderWidth = this._options.hoveredBorderWidth;
 				this._options.fillOpacity = this._options.hoveredFillOpacity;
 				this._highlightCorners = true;
@@ -171,7 +175,11 @@ export class ShapeDrawing
 				return;
 			}
 
-			if (this._options.borderWidth !== this._originalBorderWidth) {
+			if (
+				this._options.borderWidth !== this._originalBorderWidth ||
+				this._options.fillOpacity !== this._originalFillOpacity ||
+				this._highlightCorners !== false
+			) {
 				this._options.borderWidth = this._originalBorderWidth;
 				this._options.fillOpacity = this._originalFillOpacity;
 				this._highlightCorners = false;
