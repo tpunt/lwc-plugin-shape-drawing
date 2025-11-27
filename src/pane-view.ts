@@ -61,6 +61,6 @@ export class ShapeDrawingPaneView implements IPrimitivePaneView {
 	}
 
 	renderer() {
-		return new ShapeDrawingPaneRenderer(this._points, this._source.highlightCorners, this._source.options);
+		return new ShapeDrawingPaneRenderer(this._points, this._source.options, this._source.isHovered() || this._source.isSelected());
 	}
 }

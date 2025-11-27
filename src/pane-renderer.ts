@@ -6,11 +6,11 @@ import { HoveredCornerShape, ShapeDrawingOptions } from './options';
 export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 	_points: ViewPoint[];
 	_options: ShapeDrawingOptions;
-	_highlightCorners: boolean;
+	_applyHighlighting: boolean;
 
-	constructor(points: ViewPoint[], highlightCorners: boolean, options: ShapeDrawingOptions) {
+	constructor(points: ViewPoint[], options: ShapeDrawingOptions, applyHighlighting: boolean) {
 		this._points = points;
-		this._highlightCorners = highlightCorners;
+		this._applyHighlighting = applyHighlighting;
 		this._options = options;
 	}
 
@@ -18,6 +18,14 @@ export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 		target.useBitmapCoordinateSpace(scope => {
 			if (this._points.some(p => p.x === null || p.y === null)) {
 				return;
+			}
+
+			let borderWidth = this._options.borderWidth;
+			let fillOpacity = this._options.fillOpacity;
+
+			if (this._applyHighlighting) {
+				borderWidth = this._options.hoveredBorderWidth;
+				fillOpacity = this._options.hoveredFillOpacity;
 			}
 
 			const points = this._points.map(p => ({
@@ -44,26 +52,26 @@ export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 						// Converts rgb(a, b, c) to rgba(a, b, c, 0.5) if fillOpacity is 0.5
 						ctx.fillStyle = this._options.fillColor.substring(
 							0, this._options.fillColor.length - 1
-						) + `, ${this._options.fillOpacity})`;
+						) + `, ${fillOpacity})`;
 					}
 				} else {
-					ctx.fillStyle = this._hexToRgba(this._options.fillColor, this._options.fillOpacity);
+					ctx.fillStyle = this._hexToRgba(this._options.fillColor, fillOpacity);
 				}
 				ctx.fill();
 			}
 
 			if (this._options.borderVisible) {
 				ctx.strokeStyle = this._options.borderColor;
-				ctx.lineWidth = this._options.borderWidth;
+				ctx.lineWidth = borderWidth;
 				setLineStyle(ctx, this._options.borderStyle);
 			} else { // border will default to a thin black line without the following
 				ctx.lineWidth = 0.00001;
-				ctx.strokeStyle = this._hexToRgba(this._options.fillColor, this._options.fillOpacity);
+				ctx.strokeStyle = this._hexToRgba(this._options.fillColor, fillOpacity);
 			}
 
 			ctx.stroke();
 
-			if (this._highlightCorners && this._options.hoveredCornerShape !== null) {
+			if (this._applyHighlighting && this._options.hoveredCornerShape !== null) {
 				switch (this._options.hoveredCornerShape) {
 					case HoveredCornerShape.Circle: {
 						ctx.fillStyle = this._options.borderColor;

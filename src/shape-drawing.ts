@@ -15,7 +15,6 @@ export class ShapeDrawing
 {
 	_options: ShapeDrawingOptions;
 	_points: Point[];
-	_highlightCorners: boolean = false;
 	_paneViews: ShapeDrawingPaneView[];
 	_timeAxisViews: Map<Time, ShapeDrawingTimeAxisView> = new Map();
 	_priceAxisViews: Map<number, ShapeDrawingPriceAxisView> = new Map();
@@ -25,6 +24,7 @@ export class ShapeDrawing
 	_originalFillOpacity: number;
 	_selectedPointIndex: number = -1;
 	_isSelected: boolean = false;
+	_isHovered: boolean = false;
 
 	constructor(
 		points: Point[],
@@ -150,42 +150,16 @@ export class ShapeDrawing
 		}
 
 		this._isSelected = isSelected;
-
-		if (isSelected) {
-			this._setHovered(true);
-		} else {
-			this._setHovered(false);
-		}
+		this.requestUpdate();
 	}
 
-	private _setHovered(yes: boolean) {
-		if (yes) {
-			if (
-				this._options.borderWidth !== this._options.hoveredBorderWidth ||
-				this._options.fillOpacity !== this._options.hoveredFillOpacity ||
-				this._highlightCorners !== true
-			) {
-				this._options.borderWidth = this._options.hoveredBorderWidth;
-				this._options.fillOpacity = this._options.hoveredFillOpacity;
-				this._highlightCorners = true;
-				this.requestUpdate();
-			}
-		} else {
-			if (this._isSelected) {
-				return;
-			}
-
-			if (
-				this._options.borderWidth !== this._originalBorderWidth ||
-				this._options.fillOpacity !== this._originalFillOpacity ||
-				this._highlightCorners !== false
-			) {
-				this._options.borderWidth = this._originalBorderWidth;
-				this._options.fillOpacity = this._originalFillOpacity;
-				this._highlightCorners = false;
-				this.requestUpdate();
-			}
+	private _setHovered(isHovered: boolean) {
+		if (this._isHovered === isHovered) {
+			return;
 		}
+
+		this._isHovered = isHovered;
+		this.requestUpdate();
 	}
 
 	public hitTest?(x: number, y: number): PrimitiveHoveredItem | null {
@@ -380,10 +354,6 @@ export class ShapeDrawing
 		return this._options;
 	}
 
-	public get highlightCorners(): boolean {
-		return this._highlightCorners;
-	}
-
 	public get objectId(): string {
 		return this._objectId;
 	}
@@ -411,6 +381,14 @@ export class ShapeDrawing
 
 	public get points(): Point[] {
 		return this._points;
+	}
+
+	public isHovered(): boolean {
+		return this._isHovered;
+	}
+
+	public isSelected(): boolean {
+		return this._isSelected;
 	}
 }
 

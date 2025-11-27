@@ -12,5 +12,6 @@ export interface ShapeDrawingDataSource {
 	series: ISeriesApi<keyof SeriesOptionsMap>;
 	options: ShapeDrawingOptions;
 	points: Point[];
-	highlightCorners: boolean;
+	isHovered(): boolean;
+	isSelected(): boolean;
 }
