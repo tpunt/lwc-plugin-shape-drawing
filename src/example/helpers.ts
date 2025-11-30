@@ -63,6 +63,29 @@ export function shapeDrawingSelection(event: MouseEvent) {
 				...defaultShapeOptions,
 			};
 			break;
+		case '-':
+			state.edgeCount = 1;
+			state.shapeOptions = {
+				...defaultShapeOptions,
+				borderWidth: 3,
+				hoveredBorderWidth: 8,
+				joinFirstToLastCorner: false,
+				showPriceAxisLabels: true,
+				extendToRight: true,
+			};
+			break;
+		case '--':
+			state.edgeCount = 1;
+			state.shapeOptions = {
+				...defaultShapeOptions,
+				borderWidth: 3,
+				hoveredBorderWidth: 8,
+				joinFirstToLastCorner: false,
+				showPriceAxisLabels: true,
+				extendToLeft: true,
+				extendToRight: true,
+			};
+			break;
 	}
 }
 

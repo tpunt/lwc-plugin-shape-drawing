@@ -36,12 +36,29 @@ export class ShapeDrawingPaneRenderer implements IPrimitivePaneRenderer {
 
 			ctx.beginPath();
 
-			if (this._options.joinFirstToLastCorner) {
-				ctx.moveTo(points[points.length - 1].x, points[points.length - 1].y);
+			let drawingPoints = points;
+
+			if (this._options.extendToLeft || this._options.extendToRight) {
+				// For drawing a horizontal line, but not the hover animations on the far left/right.
+				drawingPoints = [];
+
+				if (this._options.extendToLeft) {
+					drawingPoints.push({ x: 0 as Coordinate, y: points[0].y });
+				}
+
+				drawingPoints.push(...points);
+
+				if (this._options.extendToRight) {
+					drawingPoints.push({ x: scope.bitmapSize.width as Coordinate, y: points[points.length - 1].y });
+				}
 			}
 
-			for (let i = 0; i < points.length; ++i) {
-				ctx.lineTo(points[i].x, points[i].y);
+			if (this._options.joinFirstToLastCorner) {
+				ctx.moveTo(drawingPoints[drawingPoints.length - 1].x, drawingPoints[drawingPoints.length - 1].y);
+			}
+
+			for (let i = 0; i < drawingPoints.length; ++i) {
+				ctx.lineTo(drawingPoints[i].x, drawingPoints[i].y);
 			}
 
 			if (this._options.joinFirstToLastCorner) {

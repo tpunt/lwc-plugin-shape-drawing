@@ -13,6 +13,9 @@ export interface ShapeDrawingOptions {
 	fillColor: string; // Either rgba, or hex/rgb with fillOpacity applied to it
 	fillOpacity: number; // Overridden if fillColor is an rgba string
 	joinFirstToLastCorner: boolean; // Allows for a series of lines to be joined
+	extendToRight: boolean; // Draw a horizontal line from the click point to the right
+	extendToLeft: boolean; // Draw a horizontal line
+
 
 	mutable: boolean; // Whether the shape can be moved or changed by the user. Hovering is also ignored if false.
 	hoveredFillOpacity: number; // Only applied if fillOpacity option above is applied
@@ -40,6 +43,8 @@ export const defaultOptions: ShapeDrawingOptions = {
 	fillColor: '#ccc',
 	fillOpacity: 0.5,
 	joinFirstToLastCorner: true,
+	extendToLeft: false,
+	extendToRight: false,
 
 	mutable: true,
 	hoveredBorderWidth: 2,

@@ -192,13 +192,31 @@ export class ShapeDrawing
 		if (this._selectedPointIndex !== -1) {
 			hovered = true;
 		} else {
-			// For lines (2 points), check if cursor is near the line segment
+			// For lines (1 or 2 points), check if cursor is near the line segment
 			// For polygons (3+ points), check if cursor is inside the shape
-			if (points.length === 2) {
+			switch (points.length) {
+			case 0:
+				break;
+			case 1:
+				if (this._options.hoveredBorderDetection) {
+					if (this._options.extendToLeft) {
+						if (this._isPointNearLine(x, y, points[0], { x: 0, y: points[0].y })) {
+							hovered = true;
+						}
+					}
+
+					if (this._options.extendToRight) {
+						if (this._isPointNearLine(x, y, points[0], { x: this.chart.paneSize().width, y: points[0].y })) {
+							hovered = true;
+						}
+					}
+				}
+				break;
+			case 2:
 				if (this._options.hoveredBorderDetection && this._isPointNearLine(x, y, points[0], points[1])) {
 					hovered = true;
 				}
-			} else if (points.length >= 3) {
+			default:
 				if (!this._options.hoveredFillDetection || !this._options.joinFirstToLastCorner) { // Border hovering only
 					if (this._options.hoveredBorderDetection) {
 						for (let i = 1; i < points.length; i++) {
