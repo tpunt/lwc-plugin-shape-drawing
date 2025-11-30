@@ -1,10 +1,10 @@
 import { Logical, MouseEventParams, Time } from "lightweight-charts";
-import { defaultShapeOptions, Point } from "./classes";
-import { chart, fillOpacityElement, lineSeries, seriesPricePrecision, shapeDrawingSelectionElement, state } from "./data";
-import { HoveredObject, ShapeDrawing } from "../shape-drawing";
+import { defaultShapeOptions } from "./classes";
+import { chart, fillOpacityElement, showTimeAxisLabelsElement, showPriceAxisLabelsElement, lineSeries, seriesPricePrecision, shapeDrawingSelectionElement, state } from "./data";
+import { HoveredObject, Point, ShapeDrawing } from "../shape-drawing";
 
-const selectedButtonColor = '#aaa';
-const deselectedButtonColor = '#ccc';
+const selectedButtonColor = '#888';
+const deselectedButtonColor = '#aaa';
 
 export function shapeDrawingSelection(event: MouseEvent) {
 	if (!(event.target instanceof HTMLButtonElement)) {
@@ -67,30 +67,27 @@ export function shapeDrawingSelection(event: MouseEvent) {
 }
 
 export function moveShape(shape: ShapeDrawing, pointIndex: number) {
-	let timeDelta: Time;
+	const savedCrosshair = getCurrentCrosshair();
 
-	// Cater for when a shape is being moved from off of the timeseries to onto the timeseries
-	if (state.crosshair.time !== 0 && state.lastMouseDownPoint!.time === 0) {
-		timeDelta = 0 as Time;
-	} else {
-		timeDelta = (state.crosshair.time as number) - (state.lastMouseDownPoint!.time as number) as Time;
-	}
+	const priceDelta = state.crosshair.price - state.lastMouseDownPoint!.price;
+	const logicalDelta = (state.crosshair.logical as number) - (state.lastMouseDownPoint!.logical as number) as Logical;
+	const timeDelta = (savedCrosshair.time as number) - (state.lastMouseDownPoint!.time as number) as Time;
 
 	shape.moveBy(
 		new Point(
-			state.crosshair.price - state.lastMouseDownPoint!.price,
+			priceDelta,
 			timeDelta,
-			(state.crosshair.logical as number) - (state.lastMouseDownPoint!.logical as number) as Logical,
+			logicalDelta,
 		),
 		pointIndex,
 	);
 
-	state.lastMouseDownPoint = Object.assign({}, state.crosshair);
+	state.lastMouseDownPoint = savedCrosshair;
 }
 
 export function chartMouseDownEvent() {
 	state.mouseDown = true;
-	state.lastMouseDownPoint = Object.assign({}, state.crosshair);
+	state.lastMouseDownPoint = getCurrentCrosshair();
 
 	if (state.hoveredObject) {
 		if (state.hoveredObject.id in state.drawnObjects) {
@@ -128,6 +125,8 @@ function selectShape(shape: ShapeDrawing | null) {
 
 	// Set the options here in the selection form.
 	fillOpacityElement.value = state.shapeOptions['fillOpacity']?.toString() || '0.5';
+	showTimeAxisLabelsElement.checked = state.shapeOptions['showTimeAxisLabels'] ?? false;
+	showPriceAxisLabelsElement.checked = state.shapeOptions['showPriceAxisLabels'] ?? false;
 }
 
 export function chartMouseUpEvent() {
@@ -140,38 +139,6 @@ export function chartMouseUpEvent() {
 		handleScroll: state.savedHandleScroll,
 		handleScale: state.savedHandleScale,
 	});
-}
-
-export function chartMouseMoveEvent() {
-	if (state.mouseDown) {
-		if (!state.dragging) {
-			state.dragging = true;
-
-			if (state.hoveredObject) {
-				state.savedHandleScroll = JSON.parse(JSON.stringify(chart.options().handleScroll));
-				state.savedHandleScale = JSON.parse(JSON.stringify(chart.options().handleScale));
-
-				chart.applyOptions({
-					handleScroll: false,
-					handleScale: false,
-				});
-			}
-		}
-	}
-
-	if (state.dragging) {
-		if (state.hoveredObject) {
-			if (state.hoveredObject.id in state.drawnObjects) {
-				const shape = state.drawnObjects[state.hoveredObject.id];
-
-				if (shape) {
-					moveShape(shape, state.hoveredObject.pointIndex);
-
-					state.currentlySelectedShape = shape;
-				}
-			}
-		}
-	}
 }
 
 export function chartCrosshairMoveEvent(event:  MouseEventParams<Time>) {
@@ -206,6 +173,37 @@ export function chartCrosshairMoveEvent(event:  MouseEventParams<Time>) {
 
 	if (state.edges.length > 0) {
 		moveShape(state.currentlyDrawingShape!, state.edges.length - 1);
+		return;
+	}
+
+	if (state.mouseDown) {
+		if (!state.dragging) {
+			state.dragging = true;
+
+			if (state.hoveredObject) {
+				state.savedHandleScroll = JSON.parse(JSON.stringify(chart.options().handleScroll));
+				state.savedHandleScale = JSON.parse(JSON.stringify(chart.options().handleScale));
+
+				chart.applyOptions({
+					handleScroll: false,
+					handleScale: false,
+				});
+			}
+		}
+	}
+
+	if (state.dragging) {
+		if (state.hoveredObject) {
+			if (state.hoveredObject.id in state.drawnObjects) {
+				const shape = state.drawnObjects[state.hoveredObject.id];
+
+				if (shape) {
+					moveShape(shape, state.hoveredObject.pointIndex);
+
+					state.currentlySelectedShape = shape;
+				}
+			}
+		}
 	}
 }
 
@@ -289,7 +287,7 @@ function addEdge() {
 	}
 
 	if (!state.currentlyDrawingShape) {
-		const newPoint = Object.assign({}, state.crosshair);
+		const newPoint = getCurrentCrosshair();
 
 		state.edges.push(newPoint);
 		state.currentlyDrawingShape = new ShapeDrawing(state.edges, state.shapeOptions);
@@ -303,11 +301,32 @@ function addEdge() {
 		state.currentlyDrawingShape = null;
 	} else {
 		// Push the next point to the edges array to "show" the shape as it is being drawn
-		const nextPoint = Object.assign({}, state.crosshair);
+		const nextPoint = getCurrentCrosshair();
 
 		state.edges.push(nextPoint);
+		state.currentlyDrawingShape.addPoint(nextPoint);
+	}
+}
+
+function getCurrentCrosshair(): Point {
+	const point = Object.assign({}, state.crosshair);
+
+	if (point.time !== 0) {
+		return point;
 	}
 
+	const data = lineSeries.data();
+
+	if (data.length < 2) {
+		return point;
+	}
+
+	const fromTime = point!.time || data[0].time;
+	const timeframe = (data[1].time as number) - (data[0].time as number);
+
+	point.time = ((fromTime as number) + (point!.logical as number) * timeframe) as Time;
+
+	return point;
 }
 
 function roundNumber(n: number, dp: number) {

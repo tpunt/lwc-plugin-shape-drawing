@@ -1,5 +1,5 @@
 import { CrosshairMode, LastPriceAnimationMode, LineSeries, createChart } from 'lightweight-charts';
-import { State } from './classes';
+import { defaultShapeOptions, State } from './classes';
 import { generateLineData } from './sample-data';
 import { shapeDrawingSelection } from './helpers';
 
@@ -10,7 +10,7 @@ export const chartOptions = {
 	},
 	layout: {
 		background: {
-			color: '#ccc',
+			color: '#666',
 		},
 	},
 };
@@ -21,6 +21,8 @@ export const shapeDrawingSelectionElement = document.getElementById('shapeDrawin
 
 // Shape drawing options
 export const fillOpacityElement = document.getElementById('fillOpacity') as HTMLInputElement;
+export const showTimeAxisLabelsElement = document.getElementById('showTimeAxisLabels') as HTMLInputElement;
+export const showPriceAxisLabelsElement = document.getElementById('showPriceAxisLabels') as HTMLInputElement;
 
 // Initial setup
 
@@ -35,8 +37,7 @@ export const lineSeries = chart.addSeries(LineSeries, {
 		minMove: seriesPriceSize,
 	},
 });
-
-lineSeries.setData(generateLineData());
+export const data = generateLineData();
 
 shapeDrawingSelectionElement.addEventListener('click', shapeDrawingSelection);
 
@@ -45,6 +46,28 @@ fillOpacityElement.addEventListener('input', (event) => {
 	if (state.currentlySelectedShape) {
 		state.shapeOptions['fillOpacity'] = parseFloat((event.target as HTMLInputElement).value);
 		state.currentlySelectedShape.applyOptions(state.shapeOptions);
+	} else {
+		defaultShapeOptions.fillOpacity = parseFloat((event.target as HTMLInputElement).value);
+	}
+});
+
+// Change the shape's show time axis labels
+showTimeAxisLabelsElement.addEventListener('change', (event) => {
+	if (state.currentlySelectedShape) {
+		state.shapeOptions['showTimeAxisLabels'] = (event.target as HTMLInputElement).checked;
+		state.currentlySelectedShape.applyOptions(state.shapeOptions);
+	} else {
+		defaultShapeOptions.showTimeAxisLabels = (event.target as HTMLInputElement).checked;
+	}
+});
+
+// Change the shape's show price axis labels
+showPriceAxisLabelsElement.addEventListener('change', (event) => {
+	if (state.currentlySelectedShape) {
+		state.shapeOptions['showPriceAxisLabels'] = (event.target as HTMLInputElement).checked;
+		state.currentlySelectedShape.applyOptions(state.shapeOptions);
+	} else {
+		defaultShapeOptions.showPriceAxisLabels = (event.target as HTMLInputElement).checked;
 	}
 });
 

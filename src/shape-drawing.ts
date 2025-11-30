@@ -8,6 +8,7 @@ import { PluginBase } from './plugin-base';
 // Re-export types for public API
 export type { ShapeDrawingOptions } from './options';
 export { HoveredCornerShape } from './options';
+export { Point } from './data-source';
 
 export class ShapeDrawing
 	extends PluginBase
@@ -31,7 +32,7 @@ export class ShapeDrawing
 		options: Partial<ShapeDrawingOptions> = {}
 	) {
 		super();
-		this._points = points;
+		this._points = points.map(point => { return { ...point }}); // Copy the points
 		this._options = {
 			...defaultOptions,
 			...options,
@@ -46,25 +47,7 @@ export class ShapeDrawing
 			this._objectId = this._internalObjectId;
 		}
 
-		if (this._options.showTimeAxisLabels) {
-			for (const p of this._points) {
-				if (this._timeAxisViews.has(p.time)) {
-					continue;
-				}
-
-				this._timeAxisViews.set(p.time, new ShapeDrawingTimeAxisView(this, p));
-			}
-		}
-
-		if (this._options.showPriceAxisLabels) {
-			for (const p of this._points) {
-				if (this._priceAxisViews.has(p.price)) {
-					continue;
-				}
-
-				this._priceAxisViews.set(p.price, new ShapeDrawingPriceAxisView(this, p));
-			}
-		}
+		this.setAxisViews();
 	}
 
 	updateAllViews() {
@@ -115,6 +98,7 @@ export class ShapeDrawing
 		this._points[pointIndex].time = point.time;
 		this._points[pointIndex].logical = point.logical;
 
+		this.setAxisViews();
 		this.requestUpdate();
 	}
 
@@ -131,6 +115,13 @@ export class ShapeDrawing
 			});
 		}
 
+		this.setAxisViews();
+		this.requestUpdate();
+	}
+
+	public addPoint(point: Point) {
+		this._points.push({ ...point });
+		this.setAxisViews();
 		this.requestUpdate();
 	}
 
@@ -151,6 +142,27 @@ export class ShapeDrawing
 
 		this._isSelected = isSelected;
 		this.requestUpdate();
+	}
+
+	private setAxisViews() {
+		this._timeAxisViews.clear();
+		this._priceAxisViews.clear();
+
+		for (const p of this._points) {
+			if (this._timeAxisViews.has(p.time)) {
+				continue;
+			}
+
+			this._timeAxisViews.set(p.time, new ShapeDrawingTimeAxisView(this, p));
+		}
+
+		for (const p of this._points) {
+			if (this._priceAxisViews.has(p.price)) {
+				continue;
+			}
+
+			this._priceAxisViews.set(p.price, new ShapeDrawingPriceAxisView(this, p));
+		}
 	}
 
 	private _setHovered(isHovered: boolean) {

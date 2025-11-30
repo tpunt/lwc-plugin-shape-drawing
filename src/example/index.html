@@ -24,7 +24,7 @@
 				top: 10px;
 				left: 10px;
 				z-index: 1000;
-				background: #ccc;
+				background: #aaa;
 				padding: 10px;
 				border-radius: 5px;
 				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -33,12 +33,12 @@
 			#shapeDrawingSelection > button {
 				font-size: 2em;
 				display: block;
-				background-color: #ccc;
+				background-color: #aaa;
 			}
 
 			#shapeDrawingSelection > button:hover {
 				cursor: pointer;
-				background-color: #aaa;
+				background-color: #888;
 			}
 
 			#shapeDrawingOptions {
@@ -46,7 +46,7 @@
 				top: 10px;
 				right: 10px;
 				z-index: 1000;
-				background: #ccc;
+				background: #aaa;
 				padding: 10px;
 				border-radius: 5px;
 				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -73,7 +73,15 @@
 			<h2>Options</h2>
 			<label>
 				Fill opacity:
-				<input type="range" id="fillOpacity" min="0" max="1" step="0.01" value="0.5" />
+				<input type="range" id="fillOpacity" min="0" max="1" step="0.01" />
+			</label>
+			<label>
+				Show time axis labels:
+				<input type="checkbox" id="showTimeAxisLabels" />
+			</label>
+			<label>
+				Show price axis labels:
+				<input type="checkbox" id="showPriceAxisLabels" />
 			</label>
 		</div>
 		<div id="chart"></div>

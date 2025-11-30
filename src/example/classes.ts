@@ -1,5 +1,5 @@
-import { HandleScaleOptions, HandleScrollOptions, LineStyle, Logical, Time } from "lightweight-charts";
-import { HoveredObject, ShapeDrawing } from "../shape-drawing";
+import { HandleScaleOptions, HandleScrollOptions, LineStyle, Time } from "lightweight-charts";
+import { HoveredObject, Point, ShapeDrawing } from "../shape-drawing";
 import { ShapeDrawingOptions } from "../options";
 
 export const defaultShapeOptions: Partial<ShapeDrawingOptions> = {
@@ -33,16 +33,4 @@ export class State {
 
 	// Used for both static and interactive drawing
 	shapeOptions: Partial<ShapeDrawingOptions> = defaultShapeOptions;
-}
-
-export class Point {
-	price: number;
-	time: Time;
-	logical?: Logical;
-
-	constructor(price: number, time: Time, logical?: Logical) {
-		this.price = price;
-		this.time = time;
-		this.logical = logical;
-	}
 }
