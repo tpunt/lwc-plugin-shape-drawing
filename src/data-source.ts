@@ -6,10 +6,9 @@ export class Point {
 	time: Time;
 	logical?: Logical | undefined;
 
-	constructor(price: number, time: Time, logical?: Logical | undefined) {
+	constructor(price: number, time: Time) {
 		this.price = price;
 		this.time = time;
-		this.logical = logical;
 	}
 }
 

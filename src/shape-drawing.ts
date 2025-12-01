@@ -1,4 +1,4 @@
-import { AutoscaleInfo, Logical, PrimitiveHoveredItem, Time } from 'lightweight-charts';
+import { AutoscaleInfo, DataChangedScope, Logical, PrimitiveHoveredItem, Time } from 'lightweight-charts';
 import { ShapeDrawingPriceAxisView, ShapeDrawingTimeAxisView } from './axis-view';
 import { Point, ShapeDrawingDataSource } from './data-source';
 import { ShapeDrawingOptions, defaultOptions, HoveredCornerShape } from './options';
@@ -96,7 +96,6 @@ export class ShapeDrawing
 	public moveTo(point: Point, pointIndex: number) {
 		this._points[pointIndex].price = point.price;
 		this._points[pointIndex].time = point.time;
-		this._points[pointIndex].logical = point.logical;
 
 		this.setAxisViews();
 		this.requestUpdate();
@@ -106,12 +105,10 @@ export class ShapeDrawing
 		if (pointIndex !== -1) {
 			this._points[pointIndex].price += pointDelta.price;
 			this._points[pointIndex].time = ((this._points[pointIndex].time as number) + (pointDelta.time as number)) as Time;
-			this._points[pointIndex].logical = ((this._points[pointIndex].logical as number) + (pointDelta.logical as number)) as Logical;
 		} else {
 			this._points.forEach(p => {
 				p.price += pointDelta.price;
 				p.time = ((p.time as number) + (pointDelta.time as number)) as Time;
-				p.logical = ((p.logical as number) + (pointDelta.logical as number)) as Logical;
 			});
 		}
 
@@ -253,6 +250,12 @@ export class ShapeDrawing
 		this._setHovered(false);
 
 		return null;
+	}
+
+	dataUpdated(scope: DataChangedScope): void {
+		if (scope === 'full') {
+			this.requestUpdate();
+		}
 	}
 
 	_timeCurrentlyVisible(

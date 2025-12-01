@@ -32,6 +32,8 @@ export interface ShapeDrawingOptions {
 	labelTextColor: string;
 	priceLabelFormatter: (price: number) => string;
 	timeLabelFormatter: (time: Time) => string;
+
+	timeframeInSeconds: number; // The timeframe of the data. If 0, the inferred timeframe will be used (requires >= 2 data points)
 }
 
 export const defaultOptions: ShapeDrawingOptions = {
@@ -66,4 +68,5 @@ export const defaultOptions: ShapeDrawingOptions = {
 			: new Date(time * 1000);
 		return date.toLocaleDateString();
 	},
+	timeframeInSeconds: 0,
 } as const;

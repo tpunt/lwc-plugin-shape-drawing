@@ -1,4 +1,4 @@
-import { Logical, MouseEventParams, Time } from "lightweight-charts";
+import { MouseEventParams, Time } from "lightweight-charts";
 import { defaultShapeOptions } from "./classes";
 import { chart, fillOpacityElement, showTimeAxisLabelsElement, showPriceAxisLabelsElement, lineSeries, seriesPricePrecision, shapeDrawingSelectionElement, state } from "./data";
 import { HoveredObject, Point, ShapeDrawing } from "../shape-drawing";
@@ -93,17 +93,9 @@ export function moveShape(shape: ShapeDrawing, pointIndex: number) {
 	const savedCrosshair = getCurrentCrosshair();
 
 	const priceDelta = state.crosshair.price - state.lastMouseDownPoint!.price;
-	const logicalDelta = (state.crosshair.logical as number) - (state.lastMouseDownPoint!.logical as number) as Logical;
 	const timeDelta = (savedCrosshair.time as number) - (state.lastMouseDownPoint!.time as number) as Time;
 
-	shape.moveBy(
-		new Point(
-			priceDelta,
-			timeDelta,
-			logicalDelta,
-		),
-		pointIndex,
-	);
+	shape.moveBy(new Point(priceDelta, timeDelta), pointIndex);
 
 	state.lastMouseDownPoint = savedCrosshair;
 }

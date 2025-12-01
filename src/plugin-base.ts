@@ -16,7 +16,9 @@ export abstract class PluginBase implements ISeriesPrimitive<Time> {
 	private _chart: IChartApi | undefined = undefined;
 	private _series: ISeriesApi<keyof SeriesOptionsMap> | undefined = undefined;
 
-	protected dataUpdated?(scope: DataChangedScope): void;
+	protected dataUpdated(_scope: DataChangedScope): void {
+		// Override in subclass if needed
+	}
 	protected requestUpdate(): void {
 		if (this._requestUpdate) this._requestUpdate();
 	}
@@ -48,9 +50,7 @@ export abstract class PluginBase implements ISeriesPrimitive<Time> {
 		return ensureDefined(this._series);
 	}
 
-	private _fireDataUpdated(scope: DataChangedScope) {
-		if (this.dataUpdated) {
-			this.dataUpdated(scope);
-		}
+	private _fireDataUpdated = (scope: DataChangedScope) => {
+		this.dataUpdated(scope);
 	}
 }

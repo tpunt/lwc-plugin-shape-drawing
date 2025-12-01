@@ -1,4 +1,4 @@
-import { LineStyle, Time } from 'lightweight-charts';
+import { LineData, LineStyle, Time } from 'lightweight-charts';
 import { ShapeDrawing } from '../shape-drawing';
 import { chart, data, lineSeries, state, chartElement } from './data';
 import { chartCrosshairMoveEvent, chartMouseDownEvent, chartMouseUpEvent, keyUpEvent } from './helpers';
@@ -39,6 +39,35 @@ lineSeries.attachPrimitive(shape1);
 
 // Allows for interactivity with the shape
 state.drawnObjects[shape1.objectId] = shape1;
+
+setTimeout(() => {
+	const newData = reaggregateLineData(60 * 60 * 24 * 7, data.slice(index));
+
+	lineSeries.setData(newData);
+}, 3000);
+
+const reaggregateLineData = (toTimeframe: number, data: LineData[]): LineData[] => {
+	let newData: LineData[] = [];
+	let timeMap: Record<number, LineData> = {};
+
+	for (let i = 0; i < data.length; ++i) {
+		const lineData = data[i];
+		const alignedStartTime = lineData.time as number - (lineData.time as number % toTimeframe);
+
+		if (timeMap[alignedStartTime] === undefined) {
+			timeMap[alignedStartTime] = {
+				time: alignedStartTime as Time,
+				value: lineData.value,
+			};
+
+			newData.push(timeMap[alignedStartTime]);
+		} else {
+			timeMap[alignedStartTime].value = lineData.value;
+		}
+	}
+
+	return newData;
+  };
 
 /************************** Interactively add shapes **************************/
 
