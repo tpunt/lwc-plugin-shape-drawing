@@ -21,8 +21,6 @@ export class ShapeDrawing
 	_priceAxisViews: Map<number, ShapeDrawingPriceAxisView> = new Map();
 	_internalObjectId: string = '';
 	_objectId: string = '';
-	_originalBorderWidth: number;
-	_originalFillOpacity: number;
 	_selectedPointIndex: number = -1;
 	_isSelected: boolean = false;
 	_isHovered: boolean = false;
@@ -39,8 +37,6 @@ export class ShapeDrawing
 		};
 		this._paneViews = [new ShapeDrawingPaneView(this)];
 
-		this._originalBorderWidth = this._options.borderWidth;
-		this._originalFillOpacity = this._options.fillOpacity;
 		this._internalObjectId = `shape-drawing-${Math.random().toString(36).substring(2, 15)}`;
 
 		if (this._options.mutable) {
@@ -392,20 +388,12 @@ export class ShapeDrawing
 	}
 
 	applyOptions(options: Partial<ShapeDrawingOptions>) {
-		if (this._options.mutable !== options.mutable) {
+		if (options.mutable !== undefined && this._options.mutable !== options.mutable) {
 			if (options.mutable) {
 				this._objectId = this._internalObjectId;
 			} else {
 				this._objectId = '';
 			}
-		}
-
-		if (options.borderWidth !== undefined && this._options.borderWidth !== options.borderWidth) {
-			this._originalBorderWidth = options.borderWidth;
-		}
-
-		if (options.fillOpacity !== undefined && this._options.fillOpacity !== options.fillOpacity) {
-			this._originalFillOpacity = options.fillOpacity;
 		}
 
 		this._options = { ...this._options, ...options };

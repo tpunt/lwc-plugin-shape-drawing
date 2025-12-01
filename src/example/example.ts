@@ -44,6 +44,10 @@ setTimeout(() => {
 	const newData = reaggregateLineData(60 * 60 * 24 * 7, data.slice(index));
 
 	lineSeries.setData(newData);
+
+	shape1.applyOptions({
+		timeframeInSeconds: 60 * 60 * 24 * 7,
+	});
 }, 3000);
 
 const reaggregateLineData = (toTimeframe: number, data: LineData[]): LineData[] => {
