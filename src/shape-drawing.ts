@@ -137,6 +137,16 @@ export class ShapeDrawing
 		this.requestUpdate();
 	}
 
+	public updateObjectId(objectId: string) {
+		this._internalObjectId = objectId;
+
+		if (this._options.mutable) {
+			this._objectId = this._internalObjectId;
+		}
+
+		this.requestUpdate();
+	}
+
 	private setAxisViews() {
 		this._timeAxisViews.clear();
 		this._priceAxisViews.clear();
