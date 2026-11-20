@@ -92,4 +92,4 @@ Visit `localhost:5173` in the browser.
 
 ## Publishing
 
-From a clean clone, with a classic personal access token holding `write:packages` in your user `.npmrc`: bump `version`, then run `npm ci && npm publish`. `prepublishOnly` runs the type check and the build; consumers install the built `dist/` and nothing is built on install.
+From a clean clone, with a classic personal access token holding `write:packages` in your user `.npmrc`: the first publish is the `version` in `package.json`, made through the reviewed publish packet; for each later release bump `version`, then run `npm ci && npm publish`. `prepublishOnly` runs the type check and the build; consumers install the built `dist/` and nothing is built on install.
