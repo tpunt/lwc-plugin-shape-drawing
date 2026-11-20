@@ -14,14 +14,16 @@ See the `ShapeDrawingOptions` interface in `./src/options.ts` for setting these 
 
 ## Installation
 
+The package is published on GitHub Packages. Add `@tpunt:registry=https://npm.pkg.github.com` and a classic personal access token with `read:packages` (`//npm.pkg.github.com/:_authToken=<token>`) to your user `.npmrc`, then:
+
 ```bash
-npm install lwc-plugin-shape-drawing
+npm install @tpunt/lwc-plugin-shape-drawing
 ```
 
 ## Usage
 
 ```ts
-import { ShapeDrawing, ShapeDrawingOptions } from 'lwc-plugin-shape-drawing';
+import { ShapeDrawing, ShapeDrawingOptions } from '@tpunt/lwc-plugin-shape-drawing';
 ```
 
 ## Visual Demo
@@ -31,7 +33,7 @@ import { ShapeDrawing, ShapeDrawingOptions } from 'lwc-plugin-shape-drawing';
 ## Code Example
 
 ```ts
-import { ShapeDrawing } from 'lwc-plugin-shape-drawing';
+import { ShapeDrawing } from '@tpunt/lwc-plugin-shape-drawing';
 import { LineStyle } from 'lightweight-charts';
 
 // Draw a triangle
@@ -87,3 +89,7 @@ npm run dev
 ```
 
 Visit `localhost:5173` in the browser.
+
+## Publishing
+
+From a clean clone, with a classic personal access token holding `write:packages` in your user `.npmrc`: the first publish is the `version` in `package.json`, made through the reviewed publish packet; for each later release bump `version`, then run `npm ci && npm publish`. `prepublishOnly` runs the type check and the build; consumers install the built `dist/` and nothing is built on install.
