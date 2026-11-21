@@ -14,16 +14,16 @@ See the `ShapeDrawingOptions` interface in `./src/options.ts` for setting these 
 
 ## Installation
 
-The package is published on GitHub Packages. Add `@tpunt:registry=https://npm.pkg.github.com` and a classic personal access token with `read:packages` (`//npm.pkg.github.com/:_authToken=<token>`) to your user `.npmrc`, then:
+The package is published on GitHub Packages. Add `@trading-client:registry=https://npm.pkg.github.com` and a classic personal access token with `read:packages` (`//npm.pkg.github.com/:_authToken=<token>`) to your user `.npmrc`, then:
 
 ```bash
-npm install @tpunt/lwc-plugin-shape-drawing
+npm install @trading-client/lwc-plugin-shape-drawing
 ```
 
 ## Usage
 
 ```ts
-import { ShapeDrawing, ShapeDrawingOptions } from '@tpunt/lwc-plugin-shape-drawing';
+import { ShapeDrawing, ShapeDrawingOptions } from '@trading-client/lwc-plugin-shape-drawing';
 ```
 
 ## Visual Demo
@@ -33,7 +33,7 @@ import { ShapeDrawing, ShapeDrawingOptions } from '@tpunt/lwc-plugin-shape-drawi
 ## Code Example
 
 ```ts
-import { ShapeDrawing } from '@tpunt/lwc-plugin-shape-drawing';
+import { ShapeDrawing } from '@trading-client/lwc-plugin-shape-drawing';
 import { LineStyle } from 'lightweight-charts';
 
 // Draw a triangle
